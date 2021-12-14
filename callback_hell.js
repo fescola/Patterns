@@ -44,32 +44,34 @@ const readFiles = (files) =>{
       readFile(join(inbox,file), "utf8",(error,data) =>{
         if(error) reject (new Error("File error"))
         else {
-          writeFile(join(outbox, file), reverseText(data), error => {
-          if (!error){
-            console.log(`${file} was successfully saved in the outbox!`)
-          }
-          else reject( new Error("File could not be saved"));
-         })
-        }
+            resolve (data);
+         }
+        })
       })
+    })
+  }
+const writeFiles = (data) =>{
+  return new Promise(function(resolve,reject){
+    writeFile(join(outbox,file), reverseText(data), error =>{
+      if(error) reject (new Error("File could not be saved!"))
+      else resolve (file);
     })
   })
 }
 
+
 directory()
   .then(files =>{
     readFiles(files)
+  })
+  .then(data =>{
+    writeFiles(data)
+  })
+  .then(file=>{
+    console.log(`${file} was successfully saved in the outbox!`)
   })
   .catch(err => {
     console.log(err)
   })
 
   
-// const writeFiles = (data) =>{
-//   return new Promise(function(resolve,reject){
-//     writeFile(join(outbox,file), reverseText(data), error =>{
-//       if(error) reject (new Error("File could not be saved!"))
-//       else console.log(`${file} was successfully saved in the outbox!`)
-//     })
-//   })
-// }
