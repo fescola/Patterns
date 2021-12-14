@@ -17,36 +17,53 @@ const reverseText = str =>
   .reverse()
   .join("");
 
-// Read and reverse contents of text files in a directory
-// readdir(inbox, (error, files) => {
-//   if (error) return console.log("Error: Folder inaccessible");
-//   files.forEach(file => {
-//     readFile(join(inbox, file), "utf8", (error, data) => {
-//       if (error) return console.log("Error: File error");
-//       writeFile(join(outbox, file), reverseText(data), error => {
-//         if (error) return console.log("Error: File could not be saved!");
-//         console.log(`${file} was successfully saved in the outbox!`);
-//       });
-//     });
-//   });
-// });
-
-
-
-const something = () =>{
-  return new Promise(function(resolve,reject){
-    readdir(inbox, (error,files) =>{
-      resolve (files);
-    })
-    reject(new Error("Folder inaccesible"))
-  })
+//Read and reverse contents of text files in a directory
+const read = () =>{
+readdir(inbox, (error, files) => {
+  if (error) return console.log("Error: Folder inaccessible");
+  files.forEach(file => {
+    readFile(join(inbox, file), "utf8", (error, data) => {
+      if (error) return console.log("Error: File error");
+      writeFile(join(outbox, file), reverseText(data), error => {
+        if (error) return console.log("Error: File could not be saved!");
+        console.log(`${file} was successfully saved in the outbox!`);
+      });
+    });
+  });
+});
 }
 
-something()
-  .then(files=>{
-    files.forEach(file =>{
-      readFile(join(inbox,file), "utf8",(error,data))
+
+const directory = () =>{
+  return new Promise(function(resolve,reject){
+    readdir(inbox, (error,files) =>{
+      if(error) reject (new Error("Folder inaccesible"))
+      else resolve (files);
     })
+  })
+}
+const readFiles = (files) =>{
+  return new Promise(function(resolve,reject){
+    files.forEach(file =>{
+      readFile(join(inbox,file), "utf8",(error,data) =>{
+        if(error) reject (new Error("File error"))
+        else resolve (data);
+        })
+      })
+    })
+  }
+const writeFiles = (data) =>{
+  return new Promise(function(resolve,reject){
+    writeFile(join(outbox,file), reverseText(data), error =>{
+      if(error) reject (new Error("File could not be saved!"))
+      else console.log(`${file} was successfully saved in the outbox!`)
+    })
+}
+
+
+directory()
+  .then(files =>{
+    readFiles(files)
   })
   .then(data=>{
     writeFile(join(outbox,file), reverseText(data), error =>{
