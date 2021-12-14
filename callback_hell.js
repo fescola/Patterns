@@ -47,27 +47,32 @@ const readFiles = (files) =>{
     files.forEach(file =>{
       readFile(join(inbox,file), "utf8",(error,data) =>{
         if(error) reject (new Error("File error"))
-        else resolve (data);
-        })
+        else {
+          writeFile(join(outbox, file), reverseText(data), error => {
+          if (!error){
+            console.log(`${file} was successfully saved in the outbox!`)
+          }
+          else reject( new Error("File could not be saved"));
+         })
+        }
       })
     })
-  }
-const writeFiles = (data) =>{
-  return new Promise(function(resolve,reject){
-    writeFile(join(outbox,file), reverseText(data), error =>{
-      if(error) reject (new Error("File could not be saved!"))
-      else console.log(`${file} was successfully saved in the outbox!`)
-    })
+  })
 }
 
+// const writeFiles = (data) =>{
+//   return new Promise(function(resolve,reject){
+//     writeFile(join(outbox,file), reverseText(data), error =>{
+//       if(error) reject (new Error("File could not be saved!"))
+//       else console.log(`${file} was successfully saved in the outbox!`)
+//     })
+//   })
+// }
 
 directory()
   .then(files =>{
     readFiles(files)
   })
-  .then(data=>{
-    writeFile(join(outbox,file), reverseText(data), error =>{
-      console.log(`${file} was successfully saved in the outbox!`)
-    })
+  .catch(err => {
+    console.log(err)
   })
-  .catch(console.log('theres an error'))
