@@ -1,1 +1,1 @@
-2 2 2 2 tseht si siht//
+2 tset//

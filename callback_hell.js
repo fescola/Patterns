@@ -2,7 +2,6 @@ const {
   readdir,
   readFile,
   writeFile,
-  fs,
   write
 } = require("fs");
 const {
@@ -18,21 +17,18 @@ const reverseText = str =>
   .join("");
 
 //Read and reverse contents of text files in a directory
-const read = () =>{
-readdir(inbox, (error, files) => {
-  if (error) return console.log("Error: Folder inaccessible");
-  files.forEach(file => {
-    readFile(join(inbox, file), "utf8", (error, data) => {
-      if (error) return console.log("Error: File error");
-      writeFile(join(outbox, file), reverseText(data), error => {
-        if (error) return console.log("Error: File could not be saved!");
-        console.log(`${file} was successfully saved in the outbox!`);
-      });
-    });
-  });
-});
-}
-
+// readdir(inbox, (error, files) => {
+//   if (error) return console.log("Error: Folder inaccessible");
+//   files.forEach(file => {
+//     readFile(join(inbox, file), "utf8", (error, data) => {
+//       if (error) return console.log("Error: File error");
+//       writeFile(join(outbox, file), reverseText(data), error => {
+//         if (error) return console.log("Error: File could not be saved!");
+//         console.log(`${file} was successfully saved in the outbox!`);
+//       });
+//     });
+//   });
+// });
 
 const directory = () =>{
   return new Promise(function(resolve,reject){
@@ -60,6 +56,15 @@ const readFiles = (files) =>{
   })
 }
 
+directory()
+  .then(files =>{
+    readFiles(files)
+  })
+  .catch(err => {
+    console.log(err)
+  })
+
+  
 // const writeFiles = (data) =>{
 //   return new Promise(function(resolve,reject){
 //     writeFile(join(outbox,file), reverseText(data), error =>{
@@ -68,11 +73,3 @@ const readFiles = (files) =>{
 //     })
 //   })
 // }
-
-directory()
-  .then(files =>{
-    readFiles(files)
-  })
-  .catch(err => {
-    console.log(err)
-  })
