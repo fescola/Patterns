@@ -38,21 +38,22 @@ const directory = () =>{
     })
   })
 }
+
 const readFiles = (files) =>{
   return new Promise(function(resolve,reject){
     files.forEach(file =>{
       readFile(join(inbox,file), "utf8",(error,data) =>{
-        if(error) reject (new Error("File error"))
-        else {
+        if(error) reject (new Error("File error"));
           temp.push(file)
           temp.push(data)
-          console.log(temp)
-            resolve (temp)
-         }
+          console.log(`this is temp: ${temp}`)
         })
       })
+      console.log(temp)
+      resolve(temp)
     })
   }
+
 const writeFiles = (file,data) =>{
   console.log('hola')
   return new Promise(function(resolve,reject){
@@ -66,13 +67,24 @@ const writeFiles = (file,data) =>{
   })
 }
 
+async function test(){
+  
+  writeFile(join(outbox,file), reverseText(data), error =>{
+    if(error) reject (new Error("File could not be saved!"))
+    else {
+      temp = [];
+      resolve (file);
+    }
+  })
+}
+
 directory()
   .then(files =>{
     readFiles(files)
   })
   .then(temp =>{
-    console.log(temp)
-    writeFiles(1)
+    console.log(temp);
+    //writeFiles(temp[0],temp[1])
   })
   .then(file=>{
     console.log(`${file} was successfully saved in the outbox!`)
@@ -80,4 +92,3 @@ directory()
   .catch(err => {
     console.log(err)
   })
-
