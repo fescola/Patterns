@@ -9,7 +9,7 @@ const {
 } = require("path");
 const inbox = join(__dirname, "inbox");
 const outbox = join(__dirname, "outbox");
-
+let temp = [];
 const reverseText = str =>
   str
   .split("")
@@ -44,28 +44,32 @@ const readFiles = (files) =>{
       readFile(join(inbox,file), "utf8",(error,data) =>{
         if(error) reject (new Error("File error"))
         else {
-            resolve (data);
+          temp.push(file)
+          temp.push(data)
+            resolve (temp)
          }
         })
       })
     })
   }
-const writeFiles = (data) =>{
+const writeFiles = (file,data) =>{
   return new Promise(function(resolve,reject){
     writeFile(join(outbox,file), reverseText(data), error =>{
       if(error) reject (new Error("File could not be saved!"))
-      else resolve (file);
+      else {
+        temp = [];
+        resolve (file);
+      }
     })
   })
 }
-
 
 directory()
   .then(files =>{
     readFiles(files)
   })
-  .then(data =>{
-    writeFiles(data)
+  .then(temp =>{
+    writeFiles(temp[0],temp[1])
   })
   .then(file=>{
     console.log(`${file} was successfully saved in the outbox!`)
@@ -73,5 +77,3 @@ directory()
   .catch(err => {
     console.log(err)
   })
-
-  
