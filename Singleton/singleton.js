@@ -1,27 +1,44 @@
-/* Construeix una aplicació que creï diversos Jugadors. 
-Els jugadors podran ser afegits a un Joc, que mostrarà un
- marcador amb les puntuacions i el guanyador. L'aplicació ha
-  de poder afegir o treure punts a cada jugador perquè el marcador canviï. 
-La classe Marcador ha d'implementar un patró Singleton com a requisit indispensable. */
 
 class Marcador {
-    constructor(puntuacio){
-        this.puntuacio = puntuacio;
+    constructor(jugadors){
+        this.jugadors = jugadors;
     if(typeof Jugador.instance === "object"){
         return Jugador.instance;
     }
     Jugador.instance = this;
     return this;
     }
-}
-
-class Jugador{
-    constructor(nom,puntuacio){
-        this.nom = nom;
-        this.puntuacio = puntuacio;
+    canviPunts(jugador,punts){
+        jugador.punts = punts;
     }
 }
 
+class Jugador{
+    constructor(nom,punts){
+        this.nom = nom;
+        this.punts = punts;
+    }
+}
+
+class Joc {
+    constructor(jugadors){
+        this.jugadors = jugadors;
+    }
+    crearMarcador(){
+        marcador.jugadors = this.jugadors;
+    }
+}
+//creo els jugadors
 const jugador1 = new Jugador("pep",0);
 const jugador2 = new Jugador("pop",10);
+const jugador3 = new Jugador("pop",5);
+//faig el marcador vuit
 const marcador = new Marcador();
+//el joc rep els jugadors
+const joc = new Joc([jugador1,jugador2,jugador3]);
+//els jugadors son introduits al singleton marcador
+joc.crearMarcador();
+//canvi de punts per comprovar que funciona
+marcador.canviPunts(jugador3,25);
+//comprovacio del marcador pler
+console.log(marcador);
