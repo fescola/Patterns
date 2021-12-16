@@ -67,17 +67,6 @@ const writeFiles = (file,data) =>{
   })
 }
 
-async function test(){
-  
-  writeFile(join(outbox,file), reverseText(data), error =>{
-    if(error) reject (new Error("File could not be saved!"))
-    else {
-      temp = [];
-      resolve (file);
-    }
-  })
-}
-
 directory()
   .then(files =>{
     readFiles(files)
