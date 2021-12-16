@@ -24,12 +24,14 @@ class Tema {
     }
     nouMsg(msg){
         this.missatge.push(msg)
-        eventEmitter.emit('msg',msg)
+        this.usuaris.forEach(user => {
+            eventEmitter.emit('msg',user,msg)
+        });
     }
 }
 //emitter
-var newMsg = (msg)=>{
-    console.log(`new msg: ${msg}`)
+var newMsg = (user,msg)=>{
+    console.log(`${user.nom} has new msg: ${msg}`)
 }
 
 eventEmitter.on('msg',newMsg);
@@ -42,6 +44,7 @@ const tema1 = new Tema("Chill",[user1,user2],[])
 const tema2 = new Tema("Gym",[user3],[])
 console.log(tema1)
 tema1.nouUser(user3)
+//msgs enviats a temes 1,1 y 2
 tema1.nouMsg('hola')
 tema2.nouMsg('hey')
 tema2.nouMsg('bye')
