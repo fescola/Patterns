@@ -48,7 +48,7 @@ tema1.nouUser(user3)
 tema1.nouMsg('hola')
 tema2.nouMsg('hey')
 tema2.nouMsg('bye')
-console.log(tema1)
+//console.log(tema1)
 
 
 
