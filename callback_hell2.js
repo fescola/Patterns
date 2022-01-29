@@ -29,55 +29,31 @@ const reverseText = str =>
 //     });
 //   });
 // });
-
-const directory = () =>{
+async function directory(){
   return new Promise(function(resolve,reject){
     readdir(inbox, (error,files) =>{
-      if(error) reject (new Error("Folder inaccesible"))
-      else resolve (files);
-    })
+      if (error) return console.log("Error: Folder inaccessible");
+   else {
+     resolve(files)
+   }
+  })
   })
 }
 
-const readFiles = (files) =>{
-  return new Promise(function(resolve,reject){
-    files.forEach(file =>{
+async function readFiles (files) {
+  files.forEach(file =>{
       readFile(join(inbox,file), "utf8",(error,data) =>{
-        if(error) reject (new Error("File error"));
-          temp.push(file)
-          temp.push(data)
-          console.log(`this is temp: ${temp}`)
+        if(error) reject (new Error("File error"))
+        else {
+           writeFiles(file, data)
+         }
         })
-      })
-      console.log(temp)
-      resolve(temp)
-    })
-  }
-
-const writeFiles = (file,data) =>{
-  console.log('hola')
-  return new Promise(function(resolve,reject){
-    writeFile(join(outbox,file), reverseText(data), error =>{
-      if(error) reject (new Error("File could not be saved!"))
-      else {
-        temp = [];
-        resolve (file);
-      }
-    })
+     }
+  )}
+function writeFiles (file,data) {
+  writeFile(join(outbox, file), reverseText(data), error => {
+  if (error) return console.log("Error: File could not be saved!");
+  console.log(`${file} was successfully saved in the outbox!`);
   })
 }
-
-directory()
-  .then(files =>{
-    readFiles(files)
-  })
-  .then(temp =>{
-    console.log(temp);
-    //writeFiles(temp[0],temp[1])
-  })
-  .then(file=>{
-    console.log(`${file} was successfully saved in the outbox!`)
-  })
-  .catch(err => {
-    console.log(err)
-  })
+readFiles(directory())
