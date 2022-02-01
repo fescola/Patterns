@@ -44,7 +44,7 @@ function writeFiles (file,data) {
   })
 }
 
-var direct = directory();
-direct.then(files =>{
+directory()
+.then(files =>{
   readFiles(files)
 })
