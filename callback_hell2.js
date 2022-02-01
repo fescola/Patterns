@@ -16,31 +16,17 @@ const reverseText = str =>
   .reverse()
   .join("");
 
-//Read and reverse contents of text files in a directory
-// readdir(inbox, (error, files) => {
-//   if (error) return console.log("Error: Folder inaccessible");
-//   files.forEach(file => {
-//     readFile(join(inbox, file), "utf8", (error, data) => {
-//       if (error) return console.log("Error: File error");
-//       writeFile(join(outbox, file), reverseText(data), error => {
-//         if (error) return console.log("Error: File could not be saved!");
-//         console.log(`${file} was successfully saved in the outbox!`);
-//       });
-//     });
-//   });
-// });
-async function directory(){
+
+function directory(){
   return new Promise(function(resolve,reject){
     readdir(inbox, (error,files) =>{
-      if (error) return console.log("Error: Folder inaccessible");
-   else {
-     resolve(files)
-   }
+      if (error) reject(error)
+      else resolve(files)
   })
-  })
+})
 }
 
-async function readFiles (files) {
+function readFiles (files) {
   files.forEach(file =>{
       readFile(join(inbox,file), "utf8",(error,data) =>{
         if(error) reject (new Error("File error"))
@@ -50,10 +36,15 @@ async function readFiles (files) {
         })
      }
   )}
+
 function writeFiles (file,data) {
   writeFile(join(outbox, file), reverseText(data), error => {
   if (error) return console.log("Error: File could not be saved!");
   console.log(`${file} was successfully saved in the outbox!`);
   })
 }
-readFiles(directory())
+
+var direct = directory();
+direct.then(files =>{
+  readFiles(files)
+})
