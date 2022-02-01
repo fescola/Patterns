@@ -5,4 +5,4 @@ class Usuari {
     }
 }
 
-module.exports =  { Usuari }
+module.exports =  Usuari

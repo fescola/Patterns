@@ -1,4 +1,5 @@
-
+const EventEmitter = require('events');
+var eventEmitter = new EventEmitter();
 class Tema {
     constructor(nom,usuaris,missatge){
         this.nom = nom;
@@ -15,5 +16,9 @@ class Tema {
         });
     }
 }
+var newMsg = (user,msg)=>{
+    console.log(`${user.nom} has new msg: ${msg}`)
+}
 
-module.exports =  { Tema }
+eventEmitter.on('msg',newMsg);
+module.exports = Tema
